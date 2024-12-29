@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<p id="demo"></p>
+
+<style>
+	.container{
+    	width: 100vw;
+        margin: 20px;
+    }
+    
+    tr{
+    	display: grid;
+    	grid-template-columns: 1fr 1fr 4fr 1fr;
+    
+    }
+    th, td{
+    	text-align: left;
+        text-align: left;
+    	word-break: break-word;
+    	padding: 5px;
+        border-bottom: 1px solid #e4e4e4;
+	    border-left: 1px solid #e4e4e4;
+    }
+	.page{
+    	display: flex;
+        gap: 10px;
+        justify-content: center;
+        margin-top: 20px;
+    }
+    .page input{
+    	width: 21px;
+    	text-align: center;
+        
+    }
+</style>
+
+<script>
+
+async function TodoApp() {
+
+  const body = document.getElementById("demo");
+  let skipIntented = 0,
+    limitIntended = 10,
+    totalPresent = 1000;
+  const container = document.createElement("div");
+  container.className = "container";
+  body.appendChild(container);
+  let tableTag = document.createElement("table");
+  container.appendChild(tableTag);
+
+  /** pagination */
+  const page = document.createElement("div");
+  page.className = "page";
+  
+  
+  let hRow = document.createElement("tr");
+  val(hRow, "Id", "th");
+  val(hRow, "UserId", "th");
+  val(hRow, "Todo", "th");
+  val(hRow, "Completed", "th");
+  tableTag.appendChild(hRow);
+  
+  const input = document.createElement("input");
+  input.value = 10;
+
+  page.appendChild(input);
+  input.addEventListener('change', async (e) => {
+    // tableTag = document.createElement("table");
+  	tableTag.replaceChildren();
+    await getTodoList(0, e.target.value);
+    limitIntended = +e.target.value;
+    skipIntented = 0;
+    
+  })
+
+  /** attaching pagination to table itself */
+  container.appendChild(page);
+
+  const right = document.createElement("button");
+  right.textContent = "Next ->";
+  page.appendChild(right);
+
+  
+  right.addEventListener('click',async (e) => {
+
+  	await getTodoList(skipIntented+limitIntended, limitIntended);
+    skipIntented += limitIntended;
+  });
+
+
+  async function getTodoList(skip = 0, limit = 10) {
+  
+    const response = await fetch(
+      `https://dummyjson.com/todos?limit=${limit}&skip=${skip}`
+    );
+    const result = await response.json();
+    const todos = result?.todos ?? [];
+    if(!todos.length) return;
+    totalPresent = result.total;
+
+    for (let i = 0; i < todos.length; i++) {
+      hRow = document.createElement("tr");
+      const { id, userId, todo, completed } = todos?.[i] ?? {};
+      val(hRow, id, "th");
+      val(hRow, userId, "td");
+      val(hRow, todo, "td");
+      val(hRow, completed, "td");
+    }
+
+    if (totalPresent === document.getElementsByTagName('tr').length) {
+      right.setAttribute('disabled',true);
+    } else {
+      right.removeAttribute('disabled');
+    }
+  }
+
+  /** creates tag for table */
+  function val(row, value = "", tag = "td", table = tableTag) {
+    const hCol = document.createElement(tag);
+    hCol.textContent = value;
+    tableTag.appendChild(hRow);
+    hRow.appendChild(hCol);
+
+    /** attaching to table itself */
+    table.appendChild(row);
+  }
+  
+  
+  await getTodoList();
+}
+
+TodoApp()
+</script>
+
+</body>
+</html>
