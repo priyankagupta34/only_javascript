@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<p id="demo"></p>
+
+<style>
+	.container{
+        margin: 20px;
+    }
+    
+    tr{
+    	display: grid;
+    	grid-template-columns: 1fr 1fr 4fr 1fr 2fr;
+    
+    }
+    th, td{
+    	text-align: left;
+        text-align: left;
+    	word-break: break-word;
+    	padding: 5px;
+        border-bottom: 1px solid #e4e4e4;
+	    border-left: 1px solid #e4e4e4;
+    }
+	.page{
+    	display: flex;
+        gap: 10px;
+        justify-content: center;
+        margin-top: 20px;
+    }
+    .page input{
+    	width: 21px;
+    	text-align: center;
+        
+    }
+</style>
+
+<script>
+
+(async function() {
+
+  let skipIntended = 0,
+    limitIntended = 10;
+    
+  const body = document.getElementById("demo");
+  const container = document.createElement('div');
+  container.className = 'container';
+  body.appendChild(container);
+  
+  const table = document.createElement('table');
+  container.appendChild(table);
+  createHeader();
+
+  
+  const page = document.createElement('div');
+  container.appendChild(page);
+  page.className = 'page';
+  
+
+  
+    
+  const input = document.createElement('input');
+  page.appendChild(input);
+  input.value = 10;
+  input.addEventListener('change', async (e) => {
+  	table.replaceChildren();
+    createHeader();
+  	await getTodoList(0, e.target.value);
+    limitIntended = +e.target.value;
+    skipIntended = 0;
+  })
+  
+  
+  const next = document.createElement('button');
+  next.textContent = 'Next ->';
+  page.appendChild(next);
+
+  next.addEventListener('click', async (e) => {
+  	await getTodoList(skipIntended + limitIntended, limitIntended);
+    skipIntended = skipIntended + limitIntended;
+  })
+  
+  
+  const reset = document.createElement('button');
+  reset.textContent = 'Reset Pages <>';
+  page.appendChild(reset);
+
+  reset.addEventListener('click', async (e) => {
+    table.replaceChildren();
+    createHeader();
+  	await getTodoList(0, 10);
+    skipIntended = 0;
+    limitIntended = 10;
+    input.value = 10;
+  })
+  
+  
+  
+  
+  
+  function createHeader() {
+    const row = document.createElement('tr');
+    table.appendChild(row);
+    updateTable(row, 'Id', 'th');
+    updateTable(row, 'UserId', 'th');
+    updateTable(row, 'Todo', 'th');
+    updateTable(row, 'Completed', 'th');
+    updateTable(row, 'Actions', 'th');
+  }
+  
+  function updateTable(hrow, value, rowTag = 'td') {
+    const tag = document.createElement(rowTag);
+    tag.textContent = value;
+    hrow.appendChild(tag);
+    return tag; // for updations
+  }
+  
+  
+  async function getTodoList(skip=0, limit=10) {
+  	const res = await fetch(`https://dummyjson.com/todos?limit=${limit}&skip=${skip}`);
+    const result = await res.json();
+    const todos = result?.todos ?? [];
+    
+    if(!todos.length) return;
+    console.log('result.tota', document.getElementsByTagName('tr').length)
+
+    for (const {todo, id, userId, completed} of todos) {
+    	const row = document.createElement('tr');
+        row.addEventListener('click', async () =>{
+        	await getUserAllTodos(userId);
+        });
+	    table.appendChild(row);
+        updateTable(row, id);
+        updateTable(row, userId);
+        updateTable(row, todo);
+        const status = updateTable(row, completed);
+        
+        
+
+        
+        /** adding action button of delete */
+        let tag = document.createElement('td');
+        const deleteTodo = document.createElement('button');
+        deleteTodo.textContent = 'Delete Todo';
+        deleteTodo.addEventListener('click', async (e) => {
+        	e.stopPropagation();
+        	const response = await deleteTodoAction(id);
+            if(response) {
+            	table.removeChild(row);
+            }
+        }) ;
+        tag.appendChild(deleteTodo);
+    	row.appendChild(tag);
+        
+        
+        /** adding action button of update */
+        const updateTodo = document.createElement('button');
+        updateTodo.textContent = 'Update Status';
+        updateTodo.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const rowStatus = row.children[3].textContent == 'true'
+        ? false: true;
+        const response = await updateTodoAction(id, rowStatus);
+        row.children[3].textContent = rowStatus;
+        }) ;
+        tag.appendChild(updateTodo);
+        
+    	
+    }
+    
+    if (result.total === document.getElementsByTagName('tr').length-1){
+       	next.setAttribute('disabled', true);
+    } else {
+    	next.removeAttribute('disabled');
+    }
+  }
+  
+  async function deleteTodoAction (id) {
+  	const res = await fetch('https://dummyjson.com/todos/' + id, {
+      method: 'DELETE',
+    });
+   	const result = await res.json();
+    return result.isDeleted;
+  }
+  
+  async function updateTodoAction (id, completed) {
+  	const res = await fetch('https://dummyjson.com/todos/' + id, {
+        method: 'PUT', /* or PATCH */
+  		headers: { 'Content-Type': 'application/json' },
+  		body: JSON.stringify({
+    		completed,
+  		})
+    });
+   	const result = await res.json();
+    console.log('result.completed ', result.completed);
+    return result.completed;
+  }
+  
+  async function getUserAllTodos (userId) {
+  	const res = await fetch('https://dummyjson.com/todos/user/' + userId);
+   	const result = await res.json();
+    return result.todos;
+  }
+ 
+ 
+  getTodoList();
+  
+})();
+
+
+</script>
+
+</body>
+</html>

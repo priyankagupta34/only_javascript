@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Custom Range Input</title>
+    <style>
+      input[type="range"] {
+        -webkit-appearance: none; /* Remove default styling */
+        appearance: none;
+        width: 300px;
+        height: 20px;
+        background: #ddd;
+        border-radius: 5px;
+        outline: none;
+      }
+
+      /* Track for WebKit browsers */
+      input[type="range"]::-webkit-slider-runnable-track {
+        background: linear-gradient(to right, #4caf50, #2196f3);
+        height: 20px;
+        border-radius: 5px;
+      }
+
+      /* Thumb for WebKit browsers */
+      input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        background: #4caf50;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 2px solid #fff;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+      }
+
+      /* Track for Firefox */
+      input[type="range"]::-moz-range-track {
+        background: linear-gradient(to right, #4caf50, #2196f3);
+        height: 20px;
+        border-radius: 5px;
+      }
+
+      /* Thumb for Firefox */
+      input[type="range"]::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
+        background: #4caf50;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 2px solid #fff;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+      }
+
+      /* Track for Internet Explorer */
+      input[type="range"]::-ms-track {
+        background: transparent; /* MS requires transparent for custom thumb */
+        border-color: transparent;
+        color: transparent;
+        height: 20px;
+      }
+
+      /* Thumb for Internet Explorer */
+      input[type="range"]::-ms-thumb {
+        width: 20px;
+        height: 20px;
+        background: #4caf50;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 2px solid #fff;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+      }
+
+      /* Focus styles */
+      input[type="range"]:focus {
+        outline: none;
+      }
+      input[type="range"]:focus::-webkit-slider-thumb {
+        box-shadow: 0 0 10px rgba(33, 150, 243, 0.7);
+      }
+      input[type="range"]:focus::-moz-range-thumb {
+        box-shadow: 0 0 10px rgba(33, 150, 243, 0.7);
+      }
+      input[type="range"]:focus::-ms-thumb {
+        box-shadow: 0 0 10px rgba(33, 150, 243, 0.7);
+      }
+    </style>
+  </head>
+  <body>
+    <label for="slider">Custom Range Slider:</label>
+    <input type="range" id="slider" min="0" max="100" value="50" />
+  </body>
+</html>

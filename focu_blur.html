@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Focus and Blur Example</title>
+  </head>
+  <body>
+    <input type="text" id="username" placeholder="Enter username" />
+    <p id="message" style="display: none; color: red">Username is required!</p>
+
+    <script>
+      const input = document.getElementById("username");
+      const message = document.getElementById("message");
+
+      input.addEventListener("focus", () => {
+        message.style.display = "none";
+      });
+
+      input.addEventListener("blur", () => {
+        if (!input.value) {
+          message.style.display = "block";
+        }
+      });
+    </script>
+  </body>
+</html>

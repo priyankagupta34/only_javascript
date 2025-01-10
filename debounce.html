@@ -1,0 +1,21 @@
+<!DOCTYPE htm>
+<html>
+  <head>
+    <style></style>
+  </head>
+  <body>
+    <input type="text" id="debouncedInput" />
+    <input type="range" id="k" />
+    <script>
+      const input = document.getElementById("debouncedInput");
+
+      let timer = null;
+      input.addEventListener("input", (e) => {
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(() => {
+          console.log("priniting", e.target.value);
+        }, 1000);
+      });
+    </script>
+  </body>
+</html>

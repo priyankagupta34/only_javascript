@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>To do list</title>
+
+    <style>
+      .table {
+        border-top: 1px solid rgb(182, 181, 181);
+        border-left: 1px solid rgb(182, 181, 181);
+      }
+      .table tr {
+        display: grid;
+        grid-template-columns: 1fr 1fr 3fr 1fr;
+      }
+      .table th,
+      .table td {
+        border-right: 1px solid rgb(182, 181, 181);
+        border-bottom: 1px solid rgb(182, 181, 181);
+        text-align: left;
+        padding: 6px;
+      }
+      #loadMore {
+        background-color: aliceblue;
+        border: 1px solid transparent;
+        padding: 5px;
+        border-radius: 5px;
+        box-shadow: 0 1px 2px;
+        margin-top: 20px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="demo"></div>
+
+    <script>
+      const demo = selector({ id: "demo" });
+      let skip = 0;
+
+      const table = create("table", { classVal: "table", parent: demo });
+      const loadMore = create("button", {
+        id: "loadMore",
+        text: "Load More",
+        parent: demo,
+      });
+      loadMore.addEventListener("click", function () {
+        fetchTodo();
+      });
+
+      addRow({
+        elem: "th",
+        text1: "Id",
+        text2: "User Id",
+        text3: "Todo",
+        text4: "Completed",
+      });
+
+      async function fetchTodo() {
+        loadMore.textContent = "Loading...";
+        const res = await fetch(
+          "https://dummyjson.com/todos?limit=10&skip=" + skip
+        );
+        const todos = await res.json();
+        const todoList = todos.todos;
+        loadMore.textContent = "Load More";
+        if (!todoList.length) return;
+
+        skip += 10;
+        for (const { id, userId, todo, completed } of todoList) {
+          addRow({
+            text1: id,
+            text2: userId,
+            text3: todo,
+            text4: completed,
+            classVal: "todo",
+          });
+        }
+        if (selector({ classVal: "todo" }).length >= 50) {
+          loadMore.style.display = "none";
+        } else {
+          loadMore.style.display = "block";
+        }
+      }
+
+      fetchTodo();
+      function addRow({ elem, text1, text2, text3, text4, classVal }) {
+        const elemVal = elem ?? "td";
+        const row = create("tr", { parent: table, classVal });
+        const col1 = create(elemVal, { parent: row, text: text1 });
+        const col2 = create(elemVal, { parent: row, text: text2 });
+        const col3 = create(elemVal, { parent: row, text: text3 });
+        const col4 = create(elemVal, { parent: row, text: text4 });
+      }
+
+      function selector({ id, classVal }) {
+        if (id) {
+          return document.querySelector("#" + id);
+        }
+        if (classVal) {
+          return document.querySelectorAll("." + classVal);
+        }
+      }
+      function create(tag, { text, id, classVal, parent }) {
+        const node = document.createElement(tag);
+        id && (node.id = id);
+        text && (node.textContent = text);
+        classVal && node.classList.add(classVal);
+        parent.appendChild(node);
+        return node;
+      }
+    </script>
+  </body>
+</html>
