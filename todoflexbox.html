@@ -29,12 +29,15 @@
       .userId {
         border-bottom: 1px solid;
       }
+      header {
+        text-align: center;
+      }
       .userId,
       .todoBlock {
         padding: 5px;
       }
       .actions,
-      header {
+      .search {
         position: sticky;
         bottom: 0px;
         background: white;
@@ -45,11 +48,8 @@
         display: flex;
         justify-content: center;
       }
-      header {
-        top: 0px;
-        border-radius: 0 0 3px 3px;
-      }
-      .loadMore {
+      .loadMore,
+      .search input {
         padding: 10px;
         background-color: white;
         border: 1px solid gainsboro;
@@ -65,6 +65,20 @@
       .loadMore:active {
         background-color: gainsboro;
       }
+      .search {
+        display: flex;
+        justify-content: center;
+        top: 0;
+        position: sticky;
+        border-radius: 0 0 3px 3px;
+        padding: 10px 0;
+      }
+      .search input {
+        display: block;
+        cursor: unset;
+        outline: none;
+        margin: 5px 0;
+      }
     </style>
   </head>
   <body>
@@ -74,40 +88,82 @@
     <div id="demo"></div>
 
     <script>
-      const demo = get({ id: "demo" });
-      const container = create("div", {
-        classVal: "container",
-        parent: demo,
-      });
-      const action = create("div", {
-        classVal: "actions",
-        parent: demo,
-      });
-      const loadMore = create("button", {
-        parent: action,
-        text: "Load more",
-        id: "loadMore",
-        classVal: "loadMore",
-      });
-      loadMore.addEventListener("click", () => {
-        getTodoList();
-      });
+      document.addEventListener("DOMContentLoaded", () => {
+        const demo = get({ id: "demo" });
+        const search = create("div", {
+          parent: demo,
+          classVal: "search",
+        });
+        const container = create("div", {
+          classVal: "container",
+          parent: demo,
+        });
+        const action = create("div", {
+          classVal: "actions",
+          parent: demo,
+        });
+        const loadMore = create("button", {
+          parent: action,
+          text: "Load more",
+          id: "loadMore",
+          classVal: "loadMore",
+        });
 
-      let skip = 0;
-      async function getTodoList() {
-        const btn = get({ id: "loadMore" });
-        btn.textContent = "Loading...";
-        const response = await fetch(
-          "https://dummyjson.com/todos?limit=20&skip=" + skip
-        );
-        const todo = await response.json();
-        const todoList = todo.todos;
-        btn.textContent = "Load More";
-        if (todoList) {
+        const inputSearch = create("input", {
+          parent: search,
+          id: "search",
+        });
+        inputSearch.addEventListener("input", (e) => {
+          const allItems = [...get({ classVal: "todo" })].map((i) => {
+            i.style.display = "none";
+            return i;
+          });
+          const searched = allItems
+            .filter(
+              (a) =>
+                (a.innerText || "")
+                  .toLowerCase()
+                  .search((e.target.value ?? "").toLowerCase()) !== -1
+            )
+            .map((i) => {
+              i.style.display = "block";
+              return i;
+            });
+        });
+        loadMore.addEventListener("click", () => {
+          getTodoList();
+        });
+
+        let skip = 0;
+        async function getTodoList() {
+          const btn = get({ id: "loadMore" });
+          btn.textContent = "Loading...";
+          const response = await fetch(
+            "https://dummyjson.com/todos?limit=20&skip=" + skip
+          );
+          const todo = await response.json();
+          const todoList = todo.todos;
+          btn.textContent = "Load More";
+          if (todoList) {
+            todoWindow(todoList);
+            if (get({ classVal: "todo" }).length >= 150)
+              loadMore.style.visibility = "hidden";
+            else loadMore.style.visibility = "visible";
+            skip += 10;
+            window.scrollTo({
+              behavior: "smooth",
+              top: document.body.scrollHeight,
+            });
+            get({ id: "search" }).focus();
+          }
+        }
+
+        function todoWindow(todoList) {
           for (const { id, todo, completed, userId } of todoList) {
             const todoBlock = create("div", {
               parent: container,
               classVal: "todo",
+              id,
             });
             create("div", {
               parent: todoBlock,
@@ -118,6 +174,7 @@
               parent: todoBlock,
               text: `Todo: ${todo}`,
               classVal: "todoBlock",
+              id: `todo${id}`,
             });
             const status = create("div", {
               parent: todoBlock,
@@ -137,31 +194,23 @@
 
             input.checked = completed;
           }
-          if (get({ classVal: "todo" }).length >= 150)
-            loadMore.style.visibility = "hidden";
-          else loadMore.style.visibility = "visible";
-          skip += 10;
-          window.scrollTo({
-            behavior: "smooth",
-            top: document.body.scrollHeight,
-          });
         }
-      }
 
-      function create(tag, { parent, text, classVal, id }) {
-        const element = document.createElement(tag);
-        text && (element.textContent = text);
-        id && (element.id = id);
-        classVal && element.classList.add(classVal);
-        parent.appendChild(element);
-        return element;
-      }
-      function get({ id, classVal }) {
-        if (id) return document.getElementById(id);
-        if (classVal) return document.querySelectorAll("." + classVal);
-      }
+        function create(tag, { parent, text, classVal, id }) {
+          const element = document.createElement(tag);
+          text && (element.textContent = text);
+          id && (element.id = id);
+          classVal && element.classList.add(classVal);
+          parent.appendChild(element);
+          return element;
+        }
+        function get({ id, classVal }) {
+          if (id) return document.getElementById(id);
+          if (classVal) return document.querySelectorAll("." + classVal);
+        }
 
-      getTodoList();
+        getTodoList();
+      });
     </script>
   </body>
 </html>
