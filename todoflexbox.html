@@ -8,13 +8,14 @@
         margin: 5px auto;
       }
       .container {
-        display: flex;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
         gap: 10px;
-        flex-wrap: wrap;
-        justify-content: space-between;
+        /* flex-wrap: wrap;
+        justify-content: space-between; */
       }
       .todo {
-        max-width: 300px;
+        max-width: 500px;
         background-color: black;
         color: white;
         padding: 10px;
@@ -32,15 +33,27 @@
       .todoBlock {
         padding: 5px;
       }
-      .actions {
+      .actions,
+      header {
+        position: sticky;
+        bottom: 0px;
+        background: white;
+        box-shadow: 0 0 3px white;
+        border-radius: 3px 3px 0 0;
+        text-align: center;
+        width: 100%;
         display: flex;
         justify-content: center;
+      }
+      header {
+        top: 0px;
+        border-radius: 0 0 3px 3px;
       }
       .loadMore {
         padding: 10px;
         background-color: white;
         border: 1px solid gainsboro;
-        margin-top: 20px;
+        margin: 20px 0;
         border-radius: 3px;
         transition: all 0.3s;
         cursor: pointer;
@@ -55,6 +68,9 @@
     </style>
   </head>
   <body>
+    <header>
+      <h1>To dos here</h1>
+    </header>
     <div id="demo"></div>
 
     <script>
@@ -121,7 +137,7 @@
 
             input.checked = completed;
           }
-          if (get({ classVal: "todo" }).length >= 50)
+          if (get({ classVal: "todo" }).length >= 150)
             loadMore.style.visibility = "hidden";
           else loadMore.style.visibility = "visible";
           skip += 10;
