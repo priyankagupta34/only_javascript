@@ -1,0 +1,126 @@
+<!DOCTYPE htm>
+<html>
+  <head>
+    <style>
+      #demo {
+        font-family: Arial, sans-serif;
+        width: 98%;
+        margin: 5px auto;
+      }
+      .container {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+      .todo {
+        max-width: 300px;
+        background-color: black;
+        color: white;
+        padding: 10px;
+        border-radius: 4px;
+        box-shadow: 0 1px 3px gray;
+        transition: all 0.3s;
+      }
+      .todo:hover {
+        background-color: rgba(0, 0, 0, 0.843);
+      }
+      .userId {
+        border-bottom: 1px solid;
+      }
+      .userId,
+      .todoBlock {
+        padding: 5px;
+      }
+      .actions {
+        display: flex;
+        justify-content: center;
+      }
+      .loadMore {
+        padding: 10px;
+        background-color: white;
+        border: 1px solid gainsboro;
+        margin-top: 20px;
+        border-radius: 3px;
+        transition: all 0.3s;
+        cursor: pointer;
+        font-weight: 500;
+        display: flex;
+        flex-direction: row-reverse;
+      }
+      .loadMore:hover,
+      .loadMore:active {
+        background-color: gainsboro;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="demo"></div>
+
+    <script>
+      const demo = get({ id: "demo" });
+      const container = create("div", {
+        classVal: "container",
+        parent: demo,
+      });
+      const action = create("div", {
+        classVal: "actions",
+        parent: demo,
+      });
+      const loadMore = create("button", {
+        parent: action,
+        text: "Load more",
+        id: "loadMore",
+        classVal: "loadMore",
+      });
+      loadMore.addEventListener("click", () => {
+        getTodoList();
+      });
+
+      let skip = 0;
+      async function getTodoList() {
+        const btn = get({ id: "loadMore" });
+        btn.textContent = "Loading...";
+        const response = await fetch(
+          "https://dummyjson.com/todos?limit=20&skip=" + skip
+        );
+        const todo = await response.json();
+        const todoList = todo.todos;
+        btn.textContent = "Load More";
+        if (todoList) {
+          for (const { id, todo, completed, userId } of todoList) {
+            const todoBlock = create("div", {
+              parent: container,
+              classVal: "todo",
+            });
+            create("div", {
+              parent: todoBlock,
+              text: `User Id: ${userId}`,
+              classVal: "userId",
+            });
+            create("div", {
+              parent: todoBlock,
+              text: `Todo: ${todo}`,
+              classVal: "todoBlock",
+            });
+          }
+          skip += 10;
+        }
+      }
+
+      function create(tag, { parent, text, classVal, id }) {
+        const element = document.createElement(tag);
+        text && (element.textContent = text);
+        id && (element.id = id);
+        classVal && element.classList.add(classVal);
+        parent.appendChild(element);
+        return element;
+      }
+      function get({ id }) {
+        if (id) return document.getElementById(id);
+      }
+
+      getTodoList();
+    </script>
+  </body>
+</html>
