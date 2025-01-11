@@ -103,7 +103,27 @@
               text: `Todo: ${todo}`,
               classVal: "todoBlock",
             });
+            const status = create("div", {
+              parent: todoBlock,
+              classVal: "todoBlock",
+            });
+            const label = create("label", {
+              text: `Completed: ${completed ? "Yes" : "No"}`,
+              parent: status,
+            });
+            label.htmlFor = "status" + id;
+            const input = create("input", {
+              parent: status,
+              classVal: "status",
+              id: "status" + id,
+            });
+            input.type = "checkbox";
+
+            input.checked = completed;
           }
+          if (get({ classVal: "todo" }).length >= 50)
+            loadMore.style.visibility = "hidden";
+          else loadMore.style.visibility = "visible";
           skip += 10;
         }
       }
@@ -116,8 +136,9 @@
         parent.appendChild(element);
         return element;
       }
-      function get({ id }) {
+      function get({ id, classVal }) {
         if (id) return document.getElementById(id);
+        if (classVal) return document.querySelectorAll("." + classVal);
       }
 
       getTodoList();
