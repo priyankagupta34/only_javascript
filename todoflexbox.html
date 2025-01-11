@@ -141,6 +141,10 @@
             loadMore.style.visibility = "hidden";
           else loadMore.style.visibility = "visible";
           skip += 10;
+          window.scrollTo({
+            behavior: "smooth",
+            top: document.body.scrollHeight,
+          });
         }
       }
 
