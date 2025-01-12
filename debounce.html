@@ -1,11 +1,44 @@
 <!DOCTYPE htm>
 <html>
   <head>
-    <style></style>
+    <style>
+      body {
+        display: flex;
+        height: 60vh;
+        justify-content: center;
+        align-items: center;
+      }
+      .block {
+        display: flex;
+        /* height: 30px; */
+      }
+      .block input {
+        width: 300px;
+        border: 1px solid gainsboro;
+        border-radius: 10px 0 0 10px;
+        border-right: none;
+        padding: 10px;
+        font-size: 0.8em;
+        outline: none;
+      }
+      .block button {
+        width: 120px;
+        border: 2px solid rgb(89, 143, 244);
+        border-radius: 0 10px 10px 0;
+        border-left: none;
+        padding: 10px;
+        background-color: rgb(89, 143, 244);
+        color: white;
+        font-size: 0.8em;
+      }
+    </style>
   </head>
   <body>
-    <input type="text" id="debouncedInput" />
-    <input type="range" id="k" />
+    <div class="block">
+      <input type="text" id="debouncedInput" placeholder="Placeholder" />
+      <button type="button">Search</button>
+    </div>
+
     <script>
       const input = document.getElementById("debouncedInput");
 

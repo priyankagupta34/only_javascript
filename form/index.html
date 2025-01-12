@@ -1,0 +1,58 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="root">
+      <div class="left">
+        <div class="input-container">
+          <label>Username</label> <input type="text" name="username" />
+          <span class="error-msg">Invalid Username</span>
+        </div>
+        <div class="input-container">
+          <label>Password</label>
+          <input type="password" name="password" />
+          <span class="error-msg">Invalid password</span>
+        </div>
+        <div class="input-container">
+          <label>Confirm Password</label>
+          <input type="password" name="confirmPassword" />
+          <span class="error-msg">Passwords do not match</span>
+        </div>
+        <div class="input-container">
+          <label>Is Employed</label>
+          <input type="checkbox" name="isEmployed" />
+          <span class="error-msg">Passwords do not match</span>
+        </div>
+        <div class="input-container">
+          <label>Company Name</label>
+          <input type="text" name="companyName" id="companyName" disabled />
+          <span class="error-msg">Invalid Company Name</span>
+        </div>
+        <div class="input-container">
+          <label>Email</label>
+          <input type="text" name="email" disabled />
+          <span class="error-msg">Invalid Email</span>
+        </div>
+        <div class="input-container">
+          <label>Phone Number</label>
+          <input type="text" name="phoneNumber" disabled />
+          <span class="error-msg">Invalid Phone Number</span>
+        </div>
+        <button id="submitBtn">Submit</button>
+      </div>
+      <div class="right">
+        <label>My Income Sources</label>
+        <div class="input-container">
+          <label>I Have Passive Income</label>
+          <input type="radio" name="passiveIncome" id="passiveIncome" />
+        </div>
+        <div class="input-container">
+          <label>I Don't Have Passive Income</label>
+          <input type="radio" name="passiveIncome" id="notpassiveIncome" />
+        </div>
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
