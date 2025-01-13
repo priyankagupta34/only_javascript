@@ -35,7 +35,6 @@
       const state = {
         set total(newValue) {
           if (newValue !== total) {
-            console.log("check");
             total = newValue;
             const numberOfbtns = Math.ceil(total / pageLength);
             for (let i = 1; i <= numberOfbtns; i++) {
