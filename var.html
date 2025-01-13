@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Test</title>
+    <script>
+      document.addEventListener("DOMContentLoaded", function (event) {
+        var items = document.querySelectorAll(".item");
+        for (let i = 1; i <= items.length; i++) {
+          var element = items[i - 1];
+          element.addEventListener("click", function (_) {
+            console.log("You clicked on button # " + i);
+          });
+        }
+        // console.log("final i " + i);
+      });
+    </script>
+  </head>
+  <body>
+    <button class="item">A</button>
+    <button class="item">B</button>
+    <button class="item">C</button>
+    <button class="item">D</button>
+    <button class="item">E</button>
+  </body>
+</html>
