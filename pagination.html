@@ -1,0 +1,76 @@
+<!DOCTYPE htm>
+<html>
+  <head>
+    <style>
+      .pagination {
+        display: flex;
+        gap: 10px;
+      }
+      .pagination button {
+        width: 50px;
+        height: 30px;
+        border-radius: 5px;
+        border: 1px solid gainsboro;
+        background-color: ghostwhite;
+        transition: all 0.3s;
+        cursor: pointer;
+      }
+      .pagination button:hover {
+        background-color: gainsboro;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="demo"></div>
+    <script>
+      let total = 0;
+      let skipValue = 0;
+      let pageLength = 20;
+      const demo = get({ id: "demo" });
+      const pagination = create("div", {
+        className: "pagination",
+        parent: demo,
+      });
+
+      const state = {
+        set total(newValue) {
+          if (newValue !== total) {
+            console.log("check");
+            total = newValue;
+            const numberOfbtns = Math.ceil(total / pageLength);
+            for (let i = 1; i <= numberOfbtns; i++) {
+              const page = create("button", {
+                className: "page",
+                parent: pagination,
+                text: i,
+              });
+              page.addEventListener("click", () => {
+                getTodoList((i - 1) * pageLength + 1);
+              });
+            }
+          }
+        },
+      };
+
+      async function getTodoList(skip = 0) {
+        const response = await fetch(
+          "https://dummyjson.com/todos?limit=20&skip=" + skip
+        );
+        const result = await response.json();
+        state.total = result.total;
+      }
+
+      function create(tag, { className, parent, text }) {
+        const node = document.createElement(tag);
+        className && (node.className = className);
+        text && (node.innerText = text);
+        parent.appendChild(node);
+        return node;
+      }
+      function get({ id }) {
+        if (id) return document.getElementById(id);
+      }
+      getTodoList();
+    </script>
+  </body>
+</html>
