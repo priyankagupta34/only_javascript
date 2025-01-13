@@ -1,15 +1,7 @@
 const isEmployed = document.querySelector("input[type=checkbox]");
 isEmployed.addEventListener("change", () => {
   const companyName = document.getElementById("companyName");
-  const passiveIncome = document.getElementById("passiveIncome");
-  const notpassiveIncome = document.getElementById("notpassiveIncome");
   companyName.disabled = !companyName.disabled;
-  companyName.parentElement.classList.remove("invalid");
-  if (companyName.disabled) {
-    companyName.value = "";
-    notpassiveIncome.checked = true;
-  }
-  if (!companyName.disabled) passiveIncome.checked = true;
 });
 function isValid(value) {
   if (!/^[a-z0-9]+$/i.test(value)) {
@@ -33,10 +25,7 @@ inputs.forEach((input) => {
 });
 const submitBtn = document.getElementById("submitBtn");
 submitBtn.onclick = () => {
-  const inputs = [
-    ...document.querySelectorAll("input:not([type=checkbox])"),
-  ].filter((a) => !a.disabled);
-
+  const inputs = document.querySelectorAll("input:not([type=checkbox])");
   // biome-ignore lint/complexity/noForEach: <explanation>
   inputs.forEach((input) => {
     if (isValid(input.value)) {
