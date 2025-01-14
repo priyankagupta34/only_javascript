@@ -43,8 +43,8 @@
         text: "Load More",
         parent: demo,
       });
-      loadMore.addEventListener("click", function () {
-        fetchTodo();
+      loadMore.addEventListener("click", async () => {
+        await fetchTodo();
       });
 
       addRow({

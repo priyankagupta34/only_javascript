@@ -46,8 +46,10 @@
                 parent: pagination,
                 text: i,
               });
-              page.addEventListener("click", () => {
-                getTodoList((i - 1) * pageLength);
+              page.addEventListener("click", async () => {
+                page.textContent = `${i}..`;
+                await getTodoList((i - 1) * pageLength);
+                page.textContent = i;
               });
             }
           }

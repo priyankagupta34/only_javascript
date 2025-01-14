@@ -1,0 +1,87 @@
+<!DOCTYPE htm>
+<html>
+  <head>
+    <style>
+      .comment {
+        display: flex;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      /*
+While working on the website for a blog you decide to add a simple comment section. This comment section will allow users to make comments on posts, and edit those comments.
+
+The requirements for the comment feature are:
+- When run, the page should load 3 comments. The ability to load more than 3 comments is not required at this time.
+- Users can click on a comment to open the edit feature.
+- In edit mode, there is a "Save" button to the right of the comment.
+- Clicking "Save" should return the comment to view mode with the edits applied.
+
+This endpoint can be used to fetch comments for a blog post to test your development: https://dummyjson.com/posts/1/comments?limit=3. Each comment has the following structure:
+{
+  "comments": [
+    {
+      "id": 1,
+      "userId": 2,
+      "body": "This is a comment." //input disabled // edit buton
+    }
+  ]
+}
+*/
+
+      let limit = 3;
+      const root = get({ id: "root" });
+
+      async function loadsComment() {
+        const url = await fetch(
+          "https://dummyjson.com/posts/1/comments?limit=" + limit
+        );
+        const response = await url.json();
+        if (response?.comments) {
+          const comments = response?.comments;
+          for (const { body } of comments) {
+            const comment = create("div", {
+              parent: root,
+              className: "comment",
+            });
+            const input = create("div", { parent: comment, text: body });
+
+            const save = create("button", { parent: comment, text: "Save" });
+            save.style.display = "none";
+            save.addEventListener("click", (e) => {
+              e.stopPropagation();
+              input.contentEditable = false;
+              save.style.display = "none";
+              input.style.border = "none";
+            });
+            input.addEventListener("click", (e) => {
+              e.stopPropagation();
+              input.contentEditable = true;
+              input.style.border = "1px solid blue";
+              save.style.display = "block";
+              input.focus();
+            });
+          }
+        }
+      }
+
+      function create(tag, { parent, text, className }) {
+        const comment = document.createElement(tag);
+        parent && parent.appendChild(comment);
+        text && (comment.innerText = text);
+        className && (comment.className = className);
+        return comment;
+      }
+
+      function get({ id }) {
+        if (id) {
+          return document.getElementById(id);
+        }
+      }
+
+      loadsComment();
+    </script>
+  </body>
+</html>
