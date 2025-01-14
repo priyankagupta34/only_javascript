@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <style>
+      /* Define light and dark themes using :root */
+      :root {
+        --bg-color: #ffffff;
+        --text-color: #333333;
+        --accent-color: #4caf50;
+        --padding: 16px;
+        --font-size-base: 16px;
+      }
+
+      /* Define dark theme variables */
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg-color: #121212;
+          --text-color: #e0e0e0;
+          --accent-color: #81c784;
+        }
+      }
+
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        padding: var(--padding);
+        font-size: var(--font-size-base);
+        transition: background-color 0.3s, color 0.3s;
+      }
+
+      h1 {
+        color: var(--accent-color);
+        font-size: calc(var(--font-size-base) * 2);
+      }
+
+      button {
+        background-color: var(--accent-color);
+        color: var(--bg-color);
+        border: none;
+        padding: calc(var(--padding) / 2);
+        font-size: var(--font-size-base);
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      button:hover {
+        background-color: var(--text-color);
+        color: var(--accent-color);
+      }
+
+      /* Responsive typography based on viewport width */
+      @media (max-width: 600px) {
+        :root {
+          --font-size-base: 14px;
+          --padding: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Dynamic Theming with :root</h1>
+    <p>
+      This demonstrates a more advanced use of the <code>:root</code> selector
+      in CSS.
+    </p>
+    <button>Click Me</button>
+  </body>
+</html>
