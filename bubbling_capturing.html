@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      #myDiv1,
+      #myDiv2 {
+        background-color: coral;
+        padding: 50px;
+      }
+
+      #myP1,
+      #myP2 {
+        background-color: white;
+        font-size: 20px;
+        border: 1px solid;
+        padding: 20px;
+      }
+    </style>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+  </head>
+  <body>
+    <h2>JavaScript addEventListener()</h2>
+
+    <div id="myDiv1">
+      <h2>Bubbling:</h2>
+      <p id="myP1">Click me!</p>
+    </div>
+    <br />
+
+    <script>
+      document.getElementById("myP1").addEventListener(
+        "click",
+        function () {
+          console.log("Capturing You clicked the white element! 1");
+        },
+        true
+      );
+      document.getElementById("myP1").addEventListener(
+        "click",
+        function () {
+          console.log("Bubbling You clicked the white element! 2");
+        },
+        false
+      );
+
+      document.getElementById("myDiv1").addEventListener(
+        "click",
+        function () {
+          console.log("Bubbling You clicked the orange element! 3");
+        },
+        false
+      );
+
+      document.getElementById("myDiv1").addEventListener(
+        "click",
+        function () {
+          console.log("Bubbling You clicked the orange element! 31");
+        },
+        true
+      );
+
+      document.getElementById("myDiv1").addEventListener(
+        "click",
+        function () {
+          console.log("Bubbling You clicked the orange element! 33");
+        },
+        false
+      );
+
+      document.getElementById("myDiv1").addEventListener(
+        "click",
+        function () {
+          console.log("Capturing You clicked the orange element! 4");
+        },
+        true
+      );
+      document.getElementById("myP1").addEventListener(
+        "click",
+        function () {
+          console.log("Bubbling You clicked the white element! 28");
+        },
+        true
+      );
+      document.getElementById("myP1").addEventListener(
+        "click",
+        function () {
+          console.log("Bubbling You clicked the white element! 29");
+        },
+        true
+      );
+    </script>
+    31,4,1, 28,29,2,3,33
+  </body>
+</html>
